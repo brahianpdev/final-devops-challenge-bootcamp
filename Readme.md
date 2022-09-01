@@ -1,50 +1,99 @@
-# Bootcamp Final Challenge
+# Final Challenge - DevOps
 
-Hay tres servicios que tienen varios problemas y deben implementarse a través de contenedores.
+---
 
-`hello-world-golang` - Golang REST endpoints
+Para buildear, por favor ejecutar. Y posteriormente compose up para ejecutar dichos contenedores.
 
-`hello-world-nodejs` - Nodejs REST endpoint
+```bash
+docker compose build --no-cache
 
-`hello-world-nginx` - Nginx reverse proxy
+docker compose up -d
+```
 
-Revise el Desafío DevOps a continuación y los archivos README en los directorios de aplicaciones específicas. El sistema completo podrá devolver respuestas HTTP a través del proxy inverso Nginx desde una aplicación de node y golang.
+Tiempo estimado de la tarea: 3 hs.
 
-Hay varias otras mejoras y problemas presentes. Debería buscar solucionar y discutir cualquier problema que pueda surgir incluso después de tener su implementación.
+Tiempo total dedicado: 3hs 35 min.
 
-## Evaluación
+---
 
-Se estará evaluando el trabajo en base a los siguientes criterios:
+### Flujo de trabajo definido:
 
-- Infraestructura como código
-- Problemas identificados en el código
-- Soluciones implementadas
+Se evaluará la calidad de código de los respectivos servidores, así como prácticas de seguridad, arquitectura del software & código limpio.
 
-Mientras revisa los archivos, tenga en cuenta cualquier problema, incluso si no tiene tiempo para solucionarlo.
+Posteriormente, se procederá a realizar el análisis de los respectivos dockerfiles de cada servidor, evaluando la necesidad de rehacerlos completamente, editarlos, o decidir que no existe necesidad de cambios.
 
-## Time
+Para cada instancia del flujo definido, se realizará documentación concisa la cual podrá ser compartida con el equipo de trabajo.
 
-Dedique un máximo de tres (3) horas para completar el trabajo que considere que representa sus habilidades de DevOps. Si pasa más de tres (3) horas, registre el tiempo que pasó y proporcione detalles, pueden usar trello. 
+### Infraestructura como código
 
-Parte del ejercicio es ver cómo prioriza el trabajo y lo divide en partes manejables "divides y venceras"
+---
 
-## DevOps Challanges
+### Goland
 
-- Desarrollar infraestructura como código que implementa los tres servicios en un entorno local "no necesario debemos tener acceso AWS podemos armar los recursos y tenerlos listo", si cuentas con acceso alguna nube podrias desplegarlo alli.
-- Diseño de Docker-Compose que permita tener los tres servicios en un entorno de desarrollo
-- Diseñar CICD con Github Action que permita desplegar a DockerHub la aplicacion node y golang
-- Cree e implemente todas las aplicaciones en un solo comando *tips Automatiza
-- Asegúrese de que el proxy nginx esté configurado correctamente para representar ambas aplicaciones.
-- Revisar las aplicaciones para la preparación de la producción.
+### Problemas identificados en el código
 
-### Gracias a todos por participar en la Edicion del Bootcamp DevOps
+- El Dockerfile estaba vacio.
 
-⌨️ con ❤️ por [roxsross](https://github.com/roxsross) 😊
+### Soluciones implementadas
 
-No olvides revisar mi blog [roxsross](https://blog.295devops.com) 😊
+- Se creó un Dockerfile teniendo en cuenta la compilación de Golang.
 
-y mi linktree [roxsross](https://roxs.295devops.com) 😊
+---
 
-Comprarme un cafe! [![Comprar](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/roxsross)
+### Node
 
-"No se trata de cambiar el mundo, creo que creas un cambio pequeño, pero que te importe estás cambiando las cosas".
+### Problemas identificados en el código
+
+1. **Incompatibilidad de archivos:** Tenemos por un lado, un archivo .node-version que nos indica la versión 14.16.1 mientras que en nuestro Dockerfile, está usando la versión 16 (LTS).
+2. **Problema de puertos:** Nuestro Dockerfile no expone ningún puerto.
+
+### Soluciones implementadas
+
+1. Se cambió la versión usada en nuestro Dockerfile a la que corresponde (14x). Además, se usó una versión alpine con fines de comprimir nuestra imágen de forma poco invasiva.
+2. Se agregó la exposición al puerto 3000.
+
+---
+
+### Nginx
+
+### Problemas identificados en el código
+
+1. La configuración default escuchaba sólo en el puerto 80.
+2. Los proxy pass venian escuchando a un puerto en [localhost](http://localhost) por defecto.
+
+### Soluciones implementedas
+
+1. Se agregó una variable extra para que escuche cualquier puerto ó, el puerto 80.
+2. Se sustituyó dicho [localhost](http://localhost) con su respectivo puerto, linkeando su respecivo service de nuestro docker compose.
+
+### Docker compose
+
+### Problemas identificados en el código
+
+1. No existía un docker-compose
+
+### Soluciones implementadas
+
+1. Se creó un docker-compose con el respectivo servicio para cada caso mencionado anteriormente, siendo los mismos:
+
+   ⇒ node, golang, nginx
+
+1. Para cada uno de estos servicios listados, se definió la misma network en uso. Finalmente, se usó el driver bridge para linkearlas.
+
+---
+
+### Screenshots
+
+- Nginx ⇒ [http://localhost/](http://localhost/)
+
+![Untitled](https://brahianpdev.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fdd877f5c-2c48-4198-82c3-345564dd2e88%2FUntitled.png?table=block&id=112b8f76-500d-4f01-af6a-679490cf00d1&spaceId=57ef2f6c-1f04-46fb-8559-b3ef312ed19b&width=2000&userId=&cache=v2)
+
+- Node.js ⇒ [http://localhost/nodejs/hello/](http://localhost/nodejs/hello/)
+
+![Untitled](https://brahianpdev.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F477524a4-22e4-4068-9eb7-fe18ebb6a895%2FUntitled.png?table=block&id=d942a186-e791-4a34-b1eb-a1bb08043bc9&spaceId=57ef2f6c-1f04-46fb-8559-b3ef312ed19b&width=2000&userId=&cache=v2)
+
+- Golang ⇒ [http://localhost/golang/hello/](http://localhost/golang/hello/)
+
+![Untitled](https://brahianpdev.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F10f4c045-399c-40bf-960b-9a7f02f8942a%2FUntitled.png?table=block&id=85aad126-1515-4ade-95df-9980c32374d5&spaceId=57ef2f6c-1f04-46fb-8559-b3ef312ed19b&width=2000&userId=&cache=v2)
+
+---
