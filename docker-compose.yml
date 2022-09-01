@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  nodejs_service: 
+    container_name: challenge_node
+    image: challenge_node
+    build: 
+      context: ./hello-world-nodejs
+      dockerfile: Dockerfile
+    volumes:
+      - ./hello-world-nodejs:/usr/app
+    networks:
+      - challenge_network
+
+  golang_service:
+    container_name: challenge_golang
+    image: challenge_golang
+    build: 
+      context: ./hello-world-golang
+      dockerfile: Dockerfile 
+    volumes:
+      - ./hello-world-golang:/go/src/app
+    networks:
+      - challenge_network
+
+  nginx_service: 
+    container_name: challenge_nginx
+    image: challenge_nginx
+    build: 
+      context: ./hello-world-nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./hello-world-nginx/docker-deps:/etc/nginx/conf.d
+    networks:
+      - challenge_network
+
+
+networks:
+  challenge_network:
+    driver: bridge
