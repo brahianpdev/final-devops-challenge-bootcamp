@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./hello-world-nodejs:/usr/app
+    ports:
+      - "3000:3000"
     networks:
       - challenge_network
 
@@ -19,6 +21,8 @@ services:
       dockerfile: Dockerfile 
     volumes:
       - ./hello-world-golang:/go/src/app
+    ports: 
+      - "3002:3002"
     networks:
       - challenge_network
 
@@ -28,10 +32,13 @@ services:
     build: 
       context: ./hello-world-nginx
       dockerfile: Dockerfile
-    ports:
-      - "80:80"
     volumes:
       - ./hello-world-nginx/docker-deps:/etc/nginx/conf.d
+    ports:
+      - "80:18181"
+    depends_on:
+      - hello-node
+      - hello-golang
     networks:
       - challenge_network
 
