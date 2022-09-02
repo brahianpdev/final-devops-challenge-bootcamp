@@ -30,6 +30,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: "./hello-world-nodejs/package-lock.json"
       - run: npm install
 
   build-docker-node:
