@@ -5,10 +5,10 @@ env:
 
   HEROKU_EMAIL: zk.spywn@gmail.com
 
-  IMAGE_NAME_NODE: challenge_node
+  IMAGE_NAME_NODE: challenge-node-heroku
   HEROKU_NAME_NODE: challenge-node-heroku
 
-  IMAGE_NAME_GOLANG: challenge_golang
+  IMAGE_NAME_GOLANG: challenge-golang-heroku
   HEROKU_NAME_GOLANG: challenge-golang-heroku
 
 on:
