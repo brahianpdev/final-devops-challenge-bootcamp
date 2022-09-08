@@ -50,7 +50,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{env.HEROKU_NAME_NODE}} #Must be unique in Heroku
           heroku_email: "${{env.HEROKU_EMAIL}}"
-          healthcheck: "https://${{env.HEROKU_NAME_NODE}}.herokuapp.com/hello"
+          # healthcheck: "https://${{env.HEROKU_NAME_NODE}}.herokuapp.com/hello"
           appdir: "./hello-world-nodejs"
           usedocker: true
 
