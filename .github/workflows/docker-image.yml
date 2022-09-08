@@ -18,25 +18,8 @@ on:
     branches: ["main"]
 
 jobs:
-  init:
+    build-docker-node:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        node-version: [14.x]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm install
-
-  build-docker-node:
-    runs-on: ubuntu-20.04
-    # ... !
-    needs:
-      - init
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,8 +30,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_PASSWORD}}
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -58,7 +41,7 @@ jobs:
 
   deploy-heroku-node:
     runs-on: ubuntu-20.04
-    needs:
+    needs: 
       - build-docker-node
     steps:
       - uses: actions/checkout@v3
@@ -66,17 +49,15 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{env.HEROKU_NAME_NODE}} #Must be unique in Heroku
-          heroku_email: "${{ env.HEROKU_EMAIL }}"
-          healthcheck: "https://${{env.HEROKU_NAME_NODE}}.herokuapp.com"
+          heroku_email: "${{env.HEROKU_EMAIL}}"
+          healthcheck: "https://${{env.HEROKU_NAME_NODE}}.herokuapp.com/hello"
           appdir: "./hello-world-nodejs"
           usedocker: true
 
   build-docker-golang:
     runs-on: ubuntu-20.04
-    # needs:
-    # # - build-docker-node
-    # - init
-    # - deploy-heroku-node
+    needs:
+      - deploy-heroku-node
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -98,7 +79,7 @@ jobs:
 
   deploy-heroku-golang:
     runs-on: ubuntu-20.04
-    needs:
+    needs: 
       - build-docker-golang
     steps:
       - uses: actions/checkout@v3
@@ -107,6 +88,8 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{env.HEROKU_NAME_GOLANG}} #Must be unique in Heroku
           heroku_email: "danielbarbieri@gmail.com"
-          healthcheck: "https://${{env.HEROKU_NAME_GOLANG}}.herokuapp.com"
+          healthcheck: "https://${{env.HEROKU_NAME_GOLANG}}.herokuapp.com/hello"
           appdir: "./hello-world-golang"
           usedocker: true
+
+# Testing.
