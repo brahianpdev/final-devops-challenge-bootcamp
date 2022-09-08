@@ -18,7 +18,7 @@ on:
     branches: ["main"]
 
 jobs:
-    build-docker-node:
+  build-docker-node:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -41,7 +41,7 @@ jobs:
 
   deploy-heroku-node:
     runs-on: ubuntu-20.04
-    needs: 
+    needs:
       - build-docker-node
     steps:
       - uses: actions/checkout@v3
@@ -79,7 +79,7 @@ jobs:
 
   deploy-heroku-golang:
     runs-on: ubuntu-20.04
-    needs: 
+    needs:
       - build-docker-golang
     steps:
       - uses: actions/checkout@v3
@@ -91,5 +91,4 @@ jobs:
           healthcheck: "https://${{env.HEROKU_NAME_GOLANG}}.herokuapp.com/hello"
           appdir: "./hello-world-golang"
           usedocker: true
-
 # Testing.
